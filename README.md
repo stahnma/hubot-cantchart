@@ -31,7 +31,7 @@ You need a `HUBOT_GITHUB_TOKEN` environment variable set so you can make API cal
 
 # Attribution
 
-The concept of a "cant chart" came from [rick](https://github.com/rick). (Mr Cant Chart himself). See [the full presentation](https://www.slideshare.net/ogc/waxing-ballroom-floors-on-the-titani) for all the fixin's. (slide 58+)
+The concept of a "cant chart" came from [rick](https://github.com/rick). (Mr Cant Chart himself). See [the full presentation](https://www.slideshare.net/ogc/waxing-ballroom-floors-on-the-titanic) for all the fixin's. (slide 58+)
 
 See also: [websages/hates-software](https://github.com/websages/hates-software/issues/)
 

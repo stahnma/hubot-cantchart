@@ -39,7 +39,7 @@ module.exports = function(robot) {
       return false;
     }
     return true;
-  }
+  };
 
   robot.respond(/\S*excuse\S*|\S*cant chart\S*|can\'t chart\S*/i, function(msg) {
     if(!checkConfiguration(msg)) {
@@ -94,4 +94,4 @@ module.exports = function(robot) {
         msg.send(`"${randomComment.body}" -- ${randomComment.user.login}`);
       });
   });
-}
+};

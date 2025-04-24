@@ -33,7 +33,7 @@ module.exports = function(robot) {
    * @returns void
    */
   const checkConfiguration = (msg) => {
-    if (!token) {
+    if(!token) {
       robot.logger.error('Neither `HUBOT_GITHUB_TOKEN` nor `GITHUB_TOKEN` set');
       msg.send('`HUBOT_GITHUB_TOKEN` is not set.');
       return false;
@@ -42,27 +42,56 @@ module.exports = function(robot) {
   }
 
   robot.respond(/\S*excuse\S*|\S*cant chart\S*|can\'t chart\S*/i, function(msg) {
-    if (!checkConfiguration(msg)) {
+    if(!checkConfiguration(msg)) {
       return;
     }
+
     robot.http(url)
       .header('Authorization', `${authHeader} ${token}`)
-      .get()(function(err, _res, body) {
-        if (err) {
-          robot.logger.error(err);
+      .get()(function(err, res, body) {
+        if(err) {
+          robot.logger.error('HTTP request error: ' + err.message);
           msg.send('Error making request: ' + err.message);
           return;
         }
-        const comments = JSON.parse(body);
-        if(comments.length === 0) {
-          console.log('No comments found for the specified issue.');
+
+        if(res.statusCode === 401) {
+          robot.logger.error('GitHub API returned 401 Unauthorized. Token may be invalid or expired.');
+          msg.send('Authentication with GitHub failed. Please check the `HUBOT_GITHUB_TOKEN`.');
+          return;
+        }
+
+        if(res.statusCode >= 400) {
+          robot.logger.error(`GitHub API error: ${res.statusCode} - ${body}`);
+          msg.send(`GitHub API error: ${res.statusCode}`);
+          return;
+        }
+
+        let comments;
+        try {
+          comments = JSON.parse(body);
+        } catch (parseErr) {
+          robot.logger.error('Error parsing JSON from GitHub: ' + parseErr.message);
+          msg.send('Could not parse response from GitHub.');
+          return;
+        }
+
+        if(!Array.isArray(comments) || comments.length === 0) {
+          msg.send('No excuses found today.');
           return;
         }
 
         const randomComment = comments[Math.floor(Math.random() * comments.length)];
+
+        if(!randomComment || !randomComment.user || !randomComment.user.login) {
+          robot.logger.error('Unexpected response format: missing comment user information.');
+          msg.send('Something went wrong retrieving the excuse.');
+          return;
+        }
+
         robot.logger.debug(`Author: ${randomComment.user.login}`);
         robot.logger.debug(`Comment Body: ${randomComment.body}`);
-        msg.send('"' + randomComment.body + '" -- ' + randomComment.user.login);
-      })
+        msg.send(`"${randomComment.body}" -- ${randomComment.user.login}`);
+      });
   });
-};
+}

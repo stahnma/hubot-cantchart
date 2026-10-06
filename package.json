@@ -1,6 +1,6 @@
 {
   "name": "hubot-cantchart",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Get a new excuse for why you can't get any work done",
   "main": "index.js",
   "scripts": {
@@ -11,7 +11,7 @@
     "url": "git+https://github.com/stahnma/hubot-cantchart.git"
   },
   "peerDependencies": {
-    "hubot": "^3"
+    "hubot": ">=3"
   },
   "devDependencies": {
 		"jshint": "^2.9.4",

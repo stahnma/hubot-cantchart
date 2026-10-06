@@ -4,7 +4,7 @@
   "description": "Get a new excuse for why you can't get any work done",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint src/*.js",
+    "lint": "eslint .",
     "test": "script/test"
   },
   "repository": {
@@ -15,13 +15,12 @@
     "hubot": ">=3"
   },
   "devDependencies": {
-    "chai": "^4.3.10",
-    "hubot-test-helper": "^1.9.0",
-    "jshint": "^2.9.4",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "hubot": "^14.1.0",
     "mocha": "^12.0.3",
-    "nock": "^13.4.0",
-    "sinon": "^17.0.1",
-    "sinon-chai": "^3.7.0"
+    "nock": "^14.0.17"
   },
   "keywords": [
     "hubot",

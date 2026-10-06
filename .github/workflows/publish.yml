@@ -1,0 +1,64 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - '*'
+
+permissions:
+  contents: read
+  id-token: write # required for npm trusted publishing (OIDC) and provenance
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Require an annotated tag
+      id: tag
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        # Lightweight tags point straight at a commit; annotated tags point at a tag object.
+        type=$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${GITHUB_REF_NAME}" --jq .object.type)
+        if [ "$type" != "tag" ]; then
+          echo "::notice::${GITHUB_REF_NAME} is a lightweight tag; skipping publish."
+          echo "annotated=false" >> "$GITHUB_OUTPUT"
+        else
+          echo "annotated=true" >> "$GITHUB_OUTPUT"
+        fi
+
+    - uses: actions/checkout@v4
+      if: steps.tag.outputs.annotated == 'true'
+
+    - name: Use Node.js
+      if: steps.tag.outputs.annotated == 'true'
+      uses: actions/setup-node@v4
+      with:
+        node-version: 24.x
+        registry-url: https://registry.npmjs.org
+
+    - name: Check tag matches package.json version
+      if: steps.tag.outputs.annotated == 'true'
+      run: |
+        pkg_version=$(node -p "require('./package.json').version")
+        tag_version="${GITHUB_REF_NAME#v}"
+        if [ "$pkg_version" != "$tag_version" ]; then
+          echo "::error::Tag ${GITHUB_REF_NAME} does not match package.json version ${pkg_version}"
+          exit 1
+        fi
+
+    - name: npm ci and test
+      if: steps.tag.outputs.annotated == 'true'
+      run: |
+        npm ci
+        npm test
+      env:
+        CI: true
+
+    - name: Publish
+      if: steps.tag.outputs.annotated == 'true'
+      run: |
+        # Trusted publishing needs npm >= 11.5.1
+        npm install -g npm@latest
+        npm publish --provenance --access public

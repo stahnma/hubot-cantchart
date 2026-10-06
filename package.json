@@ -4,8 +4,9 @@
   "description": "Get a new excuse for why you can't get any work done",
   "main": "index.js",
   "scripts": {
-    "lint": "jshint src/*.js",
-    "test": "script/test" },
+    "lint": "eslint .",
+    "test": "script/test"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/stahnma/hubot-cantchart.git"
@@ -14,14 +15,13 @@
     "hubot": ">=3"
   },
   "devDependencies": {
-		"jshint": "^2.9.4",
-    "chai": "^4.3.10",
-    "hubot-test-helper": "^1.9.0",
-    "mocha": "^10.2.0",
-    "nock": "^13.4.0",
-    "sinon-chai": "^3.7.0",
-    "sinon": "^17.0.1"
-	},
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.12.0",
+    "globals": "^17.13.0",
+    "hubot": "^14.1.0",
+    "mocha": "^12.0.3",
+    "nock": "^14.0.17"
+  },
   "keywords": [
     "hubot",
     "excuses",

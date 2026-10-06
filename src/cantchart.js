@@ -15,8 +15,6 @@
 // This is a script for Hubot that will get a random comment from a GitHub
 // issue, in this case hard-coded to be issue#1 at websages/hates-sofware
 
-/*jshint esversion: 6 */
-
 module.exports = function(robot) {
   const username = 'websages';
   const repository = 'hates-software';
@@ -41,7 +39,7 @@ module.exports = function(robot) {
     return true;
   };
 
-  robot.respond(/\S*excuse\S*|\S*cant chart\S*|can\'t chart\S*/i, function(msg) {
+  robot.respond(/\S*excuse\S*|\S*cant chart\S*|can't chart\S*/i, function(msg) {
     if(!checkConfiguration(msg)) {
       return;
     }

@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Require an annotated tag
@@ -28,12 +28,12 @@ jobs:
           echo "annotated=true" >> "$GITHUB_OUTPUT"
         fi
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v7
       if: steps.tag.outputs.annotated == 'true'
 
     - name: Use Node.js
       if: steps.tag.outputs.annotated == 'true'
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: 24.x
         registry-url: https://registry.npmjs.org
